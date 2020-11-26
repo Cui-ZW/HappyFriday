@@ -44,7 +44,7 @@ select={'gym':  'qimo',\
 ibook=True #True 直接预定，网上支付； False 到预定界面，不确认，仅用于测试
 
 #设置邮件通知
-Email=sendemail(['test123@126.com'],isend=0)
+Email=sendemail(['test123@126.com'],isend=0) #isend=0, 测试阶段，不发送邮件；isend=1， 发送邮件通知
 
 startTime=datetime.datetime(2020,11,26,7,45,0) #设置启动时间
 print('Program will start at', startTime)
