@@ -4,7 +4,7 @@ import smtplib
 from email.mime.text import MIMEText
 class sendemail:
     def __init__(self,receivers=['booking_service@yeah.net'],isend=0):
-        #邮箱服务器地址
+        #邮箱服务器地址, 本初始化内容可以根据自己的情况进行设置
         self.mail_host = 'smtp.yeah.net'  
         #用户名
         self.mail_user = 'booking_service'  
@@ -38,12 +38,5 @@ class sendemail:
     def getreceivers(self, id=0):
         return self.receivers[id]
 
-# Email=sendemail()
-# 三个参数：第一个为文本内容，第二个 plain 设置文本格式，第三个 utf-8 设置编码
-# message = MIMEText('预定成功，请在15分钟内在清华大学体育管理与网上预约系统上完成支付', 'plain', 'utf-8')
-# message['From'] = Email.getsender()   # 发送者
-# message['To'] =  Email.getreceivers()     # 接收者 
-# message['Subject'] = '场地预定成功信息'
 
-# Email.sendemail(message0)
  
