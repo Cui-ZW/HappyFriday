@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 '''
-    HappyFriday--v1.0.1
+    HappyFriday--v1.0.2
     作者：手慢无玩家
     此脚本仅TRL内部玩家使用，严禁外传
     1.使用前请安装python3.x
@@ -20,6 +20,7 @@ import smtplib
 from email.mime.text import MIMEText
 def isElementnoPresent(dr,by,value):
     try:
+        
         element = dr.find_element(by=by, value=value)
         return False
     except:
@@ -32,21 +33,21 @@ def isElementPresent(dr,by,value):
         return False
 #基本信息设置
 #登录信息
-username="202000000"
-password="123456789"
+username="2017000000"
+password="000000000"
 #选择信息： 场馆gym; 项目：item; 日期：date; 预定场地：row(行：不包括标题行)，col(列：不包括标题列)
 select={'gym':  'qimo',\
         'item': 'badminton',\
-        'date': '2020-11-29',\
-        'row':  8,\
+        'date': '2020-12-18',\
+        'row':  -1,\
         'col':  1}
 #是否预定
-ibook=True #True 直接预定，网上支付； False 到预定界面，不确认，仅用于测试
+ibook=0 #True 直接预定，网上支付； False 到预定界面，不确认，仅用于测试
 
 #设置邮件通知
-Email=sendemail(['test123@126.com'],isend=0) #isend=0, 测试阶段，不发送邮件；isend=1， 发送邮件通知
+Email=sendemail(['test@126.com'],isend=0)
 
-startTime=datetime.datetime(2020,11,26,7,45,0) #设置启动时间
+startTime=datetime.datetime(2020,12,15,7,45,0) #设置启动时间
 print('Program will start at', startTime)
 
 while datetime.datetime.now() < startTime:
@@ -69,7 +70,8 @@ else:
     print("请检查gym输入是否正确")
     
 book_url="http://50.tsinghua.edu.cn/gymbook/gymBookAction.do?ms=viewGymBook&gymnasium_id="+gymlist[select['gym']]+"&item_id="+gymitem[select['item']]+"&time_date="+select['date']+"&userType"
-url="/html/body/table/tbody/tr["+str(select['row']+1)+"]/td["+str(select['col'])+"]"
+if (select['row'] >0):
+    url="/html/body/table/tbody/tr["+str(select['row']+1)+"]/td["+str(select['col'])+"]"
 
 
 #启动浏览器            
@@ -99,13 +101,18 @@ try:
 except:
     driver.find_element_by_xpath("/html/body/div[2]/div/div[2]/div[2]/div[3]/button").click()
 #如果没有开放，刷新页面，直到场地开放
+driver.implicitly_wait(0.5)#等待0.5秒
 while isElementnoPresent(driver,"id","bookTableDiv") :
     driver.refresh() # 刷新方法 refresh
     print("预约未开放，刷新ing")
-
+driver.implicitly_wait(1)#等待3秒
 #开始进行场地预约
 driver.switch_to.frame("overlayView")
 #场地位置选择，tr 行； td 列
+if (select['row'] <0):
+    table1=driver.find_element_by_xpath("/html/body/table")
+    table_rows = len(table1.find_elements_by_tag_name('tr'))
+    url="/html/body/table/tbody/tr["+str(table_rows+select['row']+1)+"]/td["+str(select['col'])+"]"
 
 # print(url)
 driver.find_element_by_xpath(url).click()
@@ -124,8 +131,8 @@ if ibook:
         print("点击预定")
     except:
         print("场地已被预定,或不存在")
-        
-    if isElementPresent(driver,"id","parFrm"): 
+    time.sleep(0.5) #停顿片刻，给网站反应时间    
+    if isElementPresent(driver,"id","payFrm"): 
         print("成功预定,请在15分钟内支付订单")
         print("Enjoy Friday!")
         message = MIMEText('预定成功，请在15分钟内在清华大学体育管理与网上预约系统上完成支付', 'plain', 'utf-8')
