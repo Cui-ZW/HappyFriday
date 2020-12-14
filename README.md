@@ -1,5 +1,5 @@
 # HappyFriday
-    HappyFriday--v1.0.1
+    HappyFriday--v1.0.2
     作者：手慢无玩家
     此脚本仅TRL内部玩家使用，严禁外传
     1.使用前请安装python3.x
