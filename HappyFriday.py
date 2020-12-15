@@ -13,6 +13,8 @@
       D:/Python/Python39/python.exe  请替换成本机python安装目录
       或者直接双击.\HappyFriday.py (前提请关联打开方式为python)
 '''
+
+from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 import time, datetime
 from sendemail import sendemail
@@ -33,16 +35,16 @@ def isElementPresent(dr,by,value):
         return False
 #基本信息设置
 #登录信息
-username="2017000000"
-password="000000000"
+username="2020000"
+password="*0000000000"
 #选择信息： 场馆gym; 项目：item; 日期：date; 预定场地：row(行：不包括标题行)，col(列：不包括标题列)
 select={'gym':  'qimo',\
         'item': 'badminton',\
         'date': '2020-12-18',\
         'row':  -1,\
-        'col':  1}
+        'col':  7}
 #是否预定
-ibook=0 #True 直接预定，网上支付； False 到预定界面，不确认，仅用于测试
+ibook=True #True 直接预定，网上支付； False 到预定界面，不确认，仅用于测试
 
 #设置邮件通知
 Email=sendemail(['test@126.com'],isend=0)
@@ -74,8 +76,10 @@ if (select['row'] >0):
     url="/html/body/table/tbody/tr["+str(select['row']+1)+"]/td["+str(select['col'])+"]"
 
 
+chromeoptions=Options()
+chromeoptions.add_argument('--headless')
 #启动浏览器            
-driver= webdriver.Chrome()
+driver= webdriver.Chrome(options=chromeoptions)
 # driver.maximize_window()
  
 driver.implicitly_wait(3)#等待3秒
@@ -101,11 +105,11 @@ try:
 except:
     driver.find_element_by_xpath("/html/body/div[2]/div/div[2]/div[2]/div[3]/button").click()
 #如果没有开放，刷新页面，直到场地开放
-driver.implicitly_wait(0.5)#等待0.5秒
+driver.implicitly_wait(0.1)#等待0.1秒
 while isElementnoPresent(driver,"id","bookTableDiv") :
     driver.refresh() # 刷新方法 refresh
     print("预约未开放，刷新ing")
-driver.implicitly_wait(1)#等待3秒
+driver.implicitly_wait(3)#等待1秒
 #开始进行场地预约
 driver.switch_to.frame("overlayView")
 #场地位置选择，tr 行； td 列
@@ -128,7 +132,7 @@ except:
 if ibook:
     try:
         driver.find_element_by_xpath("/html/body/div[5]/div[3]/a[1]").click()
-        print("点击预定")
+        print("点击支付")
     except:
         print("场地已被预定,或不存在")
     time.sleep(0.5) #停顿片刻，给网站反应时间    
@@ -156,5 +160,5 @@ message['From'] = Email.getsender()       # 发送者
 message['To'] =  Email.getreceivers()     # 接收者 
 message['Subject'] = 'booking info'
 Email.sendemail(message)
-# driver.quit()
+driver.quit()
 # print("Hello world")
