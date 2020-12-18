@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 '''
-    HappyFriday--v1.0.2
+    HappyFriday--v1.0.3
     作者：手慢无玩家
     此脚本仅TRL内部玩家使用，严禁外传
     1.使用前请安装python3.x
@@ -35,21 +35,21 @@ def isElementPresent(dr,by,value):
         return False
 #基本信息设置
 #登录信息
-username="2020000"
-password="*0000000000"
+username="200000000000"
+password="*000000!"
 #选择信息： 场馆gym; 项目：item; 日期：date; 预定场地：row(行：不包括标题行)，col(列：不包括标题列)
 select={'gym':  'qimo',\
         'item': 'badminton',\
-        'date': '2020-12-18',\
+        'date': '2020-12-19',\
         'row':  -1,\
-        'col':  7}
+        'col':  4}
 #是否预定
-ibook=True #True 直接预定，网上支付； False 到预定界面，不确认，仅用于测试
+ibook=False #True 直接预定，网上支付； False 到预定界面，不确认，仅用于测试
 
 #设置邮件通知
 Email=sendemail(['test@126.com'],isend=0)
 
-startTime=datetime.datetime(2020,12,15,7,45,0) #设置启动时间
+startTime=datetime.datetime(2020,12,16,7,45,0) #设置启动时间
 print('Program will start at', startTime)
 
 while datetime.datetime.now() < startTime:
@@ -160,5 +160,6 @@ message['From'] = Email.getsender()       # 发送者
 message['To'] =  Email.getreceivers()     # 接收者 
 message['Subject'] = 'booking info'
 Email.sendemail(message)
+time.sleep(3) #停顿片刻，给网站反应时间
 driver.quit()
 # print("Hello world")
